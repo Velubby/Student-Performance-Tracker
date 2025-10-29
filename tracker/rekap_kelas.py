@@ -43,7 +43,7 @@ class RekapKelas:
         return True
 
     def predikat(self, skor):
-        """Konversi skor ke huruf A–E."""
+        """Konversi skor ke huruf A-E."""
         if skor >= 85: return "A"
         if skor >= 75: return "B"
         if skor >= 65: return "C"

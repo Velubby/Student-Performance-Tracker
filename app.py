@@ -1,16 +1,127 @@
+import os
+import csv
 from tracker.mahasiswa import Mahasiswa
 from tracker.penilaian import Penilaian
 from tracker.rekap_kelas import RekapKelas
 from tracker.report import build_markdown_report, save_text
 
-if __name__ == "__main__":
-    rk = RekapKelas()
-    rk.tambah_mahasiswa(Mahasiswa("230110001", "Ana", 92))
-    rk.tambah_mahasiswa(Mahasiswa("230110002", "Bimo", 60))
-    rk.set_penilaian("230110001", quiz=88, tugas=90, uts=85, uas=95)
-    rk.set_penilaian("230110002", quiz=70, tugas=65, uts=60, uas=62)
+DATA_DIR = "data"
+OUT_FILE = os.path.join("out", "report.md")
 
-    records = rk.rekap()
-    md = build_markdown_report(records)
-    save_text("out/report.md", md)
-    print("Laporan tersimpan di out/report.md")
+rk = RekapKelas()
+
+def muat_dari_csv():
+    """
+    attendance.csv: nim,nama,hadir
+    grades.csv    : nim,quiz,tugas,uts,uas
+    Kedua file opsional. Jika tidak ada, abaikan.
+    """
+    attend_path = os.path.join(DATA_DIR, "attendance.csv")
+    grades_path = os.path.join(DATA_DIR, "grades.csv")
+
+    if os.path.exists(attend_path):
+        with open(attend_path, newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                nim = (row.get("nim") or "").strip()
+                nama = (row.get("nama") or "").strip()
+                hadir = row.get("hadir", 0)
+                if not nim:
+                    continue
+                rk.tambah_mahasiswa(Mahasiswa(nim, nama, hadir))
+        print("Attendance dimuat.")
+    else:
+        print("attendance.csv tidak ditemukan (lewati).")
+
+    if os.path.exists(grades_path):
+        with open(grades_path, newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                nim = (row.get("nim") or "").strip()
+                if not nim:
+                    continue
+                rk.set_penilaian(
+                    nim,
+                    quiz=row.get("quiz", 0),
+                    tugas=row.get("tugas", 0),
+                    uts=row.get("uts", 0),
+                    uas=row.get("uas", 0),
+                )
+        print("Grades dimuat.")
+    else:
+        print("grades.csv tidak ditemukan (lewati).")
+
+def tambah_mahasiswa():
+    nim = input("NIM: ").strip()
+    nama = input("Nama: ").strip()
+    hadir = input("Hadir (%): ").strip() or "0"
+    rk.tambah_mahasiswa(Mahasiswa(nim, nama, hadir))
+    print("Mahasiswa ditambahkan.\n")
+
+def ubah_presensi():
+    nim = input("NIM: ").strip()
+    persen = input("Hadir baru (%): ").strip() or "0"
+    if rk.set_hadir(nim, persen):
+        print("Presensi diperbarui.\n")
+    else:
+        print("NIM tidak ditemukan.\n")
+
+def ubah_nilai():
+    nim = input("NIM: ").strip()
+    if nim not in rk.mhs:
+        print("NIM tidak ditemukan.\n")
+        return
+    quiz  = input("Quiz: ").strip() or None
+    tugas = input("Tugas: ").strip() or None
+    uts   = input("UTS: ").strip() or None
+    uas   = input("UAS: ").strip() or None
+    rk.set_penilaian(nim, quiz, tugas, uts, uas)
+    print("Nilai diperbarui.\n")
+
+def lihat_rekap():
+    rows = rk.rekap()
+    if not rows:
+        print("(Belum ada data)\n")
+        return
+    print("== Rekap Nilai ==")
+    for r in rows:
+        print(f"{r['nim']:>10} | {r['nama']:<20} | Hadir {r['hadir']:5.1f}% | NA {r['nilai_akhir']:6.2f} | {r['predikat']}")
+    print("")
+
+def simpan_markdown():
+    content = build_markdown_report(rk.rekap())
+    save_text(OUT_FILE, content)
+    print(f"Laporan markdown disimpan ke {OUT_FILE}\n")
+
+def menu():
+    while True:
+        print("""
+=== Student Performance Tracker ===
+1) Muat data dari CSV
+2) Tambah mahasiswa
+3) Ubah presensi
+4) Ubah nilai
+5) Lihat rekap
+6) Simpan Laporan Markdown
+7) Keluar
+""")
+        pilih = input("Pilih [1-7]: ").strip()
+        if pilih == "1":
+            muat_dari_csv()
+        elif pilih == "2":
+            tambah_mahasiswa()
+        elif pilih == "3":
+            ubah_presensi()
+        elif pilih == "4":
+            ubah_nilai()
+        elif pilih == "5":
+            lihat_rekap()
+        elif pilih == "6":
+            simpan_markdown()
+        elif pilih == "7":
+            break
+        else:
+            print("Pilihan tidak dikenal.\n")
+
+if __name__ == "__main__":
+    menu()
