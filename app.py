@@ -90,17 +90,13 @@ def lihat_rekap():
         )
     print("")
 
-def lihat_rekap_below():
-    ambang = input("Tampilkan yang NA di bawah berapa? [default 70]: ").strip() or "70"
-    try:
-        t = float(ambang)
-    except Exception:
-        t = 70.0
-    rows = rk.rekap_below(t)
+def lihat_rekap_below_70():
+    threshold = 70.0
+    rows = rk.rekap_below(threshold)
     if not rows:
-        print("(Tidak ada yang di bawah ambang)\n")
+        print("(Tidak ada mahasiswa dengan NA < 70)\n")
         return
-    print(f"== Rekap Nilai (< {t}) ==")
+    print("== Rekap Nilai (< 70) ==")
     for r in rows:
         print(
             f"{r['nim']:>10} | {r['nama']:<20} | Hadir {r['hadir']:5.1f}% | "
@@ -128,7 +124,7 @@ def menu():
 3) Ubah presensi
 4) Ubah nilai
 5) Lihat rekap
-6) Lihat rekap (nilai < ambang)
+6) Lihat rekap (nilai < 70)
 7) Simpan Laporan Markdown
 8) Simpan Laporan HTML
 9) Keluar
@@ -146,7 +142,7 @@ def menu():
         elif pilih == "5":
             lihat_rekap()
         elif pilih == "6":
-            lihat_rekap_below()
+            lihat_rekap_below_70()
         elif pilih == "7":
             simpan_markdown()
         elif pilih == "8":
