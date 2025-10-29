@@ -1,9 +1,12 @@
 import os
 import csv
-from tracker.mahasiswa import Mahasiswa
-from tracker.penilaian import Penilaian
-from tracker.rekap_kelas import RekapKelas
-from tracker.report import build_markdown_report, save_text, build_html_report
+from tracker import (
+    Mahasiswa,
+    RekapKelas,
+    build_markdown_report,
+    build_html_report,
+    save_text,
+)
 
 DATA_DIR = "data"
 OUT_MD = os.path.join("out", "report.md")
