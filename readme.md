@@ -45,18 +45,22 @@ Aplikasi konsol untuk mengelola data mahasiswa dan penilaian (OOP + modular) ser
 
 ## Format CSV (opsional)
 attendance.csv
+    ```bash
     nim,nama,hadir
     230110001,Ana,92
     230110002,Bimo,60
     230110003,Cici,100
     230110004,Dio,70
+    ```
 
 grades.csv
+    ```bash
     nim,quiz,tugas,uts,uas
     230110001,88,90,85,95
     230110002,70,65,60,62
     230110003,95,94,92,96
     230110004,55,75,70,80
+    ```
 
 ## Output yang Dihasilkan
 Markdown (out/report.md) contoh:
