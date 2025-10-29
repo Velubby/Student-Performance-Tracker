@@ -12,7 +12,7 @@ Aplikasi konsol untuk mengelola data mahasiswa dan penilaian (OOP + modular) ser
 - Muat data dari CSV (opsional). Tanpa CSV tetap bisa input manual via menu.
 
 ## Struktur Proyek
-.
+```bash
 ├─ app.py
 ├─ tracker/
 │  ├─ __init__.py
@@ -25,6 +25,7 @@ Aplikasi konsol untuk mengelola data mahasiswa dan penilaian (OOP + modular) ser
 │  └─ grades.csv
 ├─ out/                  (dibuat otomatis saat simpan laporan)
 └─ README.md
+```
 
 ## Menjalankan
 1) (Opsional) Siapkan CSV di folder data/.
