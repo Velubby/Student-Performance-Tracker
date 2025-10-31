@@ -30,7 +30,9 @@ Aplikasi konsol untuk mengelola data mahasiswa dan penilaian (OOP + modular) ser
 
 ## Menjalankan
 1) (Opsional) Siapkan CSV di folder data/.
-2) Jalankan:
+2) Jalankan sebagai paket :
+    ```python -m tracker```
+3) Jalankan skrip CLI :
     ```python app.py```
 
 ### Menu
