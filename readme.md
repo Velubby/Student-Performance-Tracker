@@ -16,6 +16,7 @@ Aplikasi konsol untuk mengelola data mahasiswa dan penilaian (OOP + modular) ser
 ├─ app.py
 ├─ tracker/
 │  ├─ __init__.py
+│  ├─ __main__.py
 │  ├─ mahasiswa.py
 │  ├─ penilaian.py
 │  ├─ rekap_kelas.py
